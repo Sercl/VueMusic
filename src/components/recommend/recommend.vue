@@ -50,7 +50,7 @@
     created() {
       setTimeout(() => {
         this._getRecommend()
-      }, 1000)//测试异步是否正常计算列表高度
+      }, 0)//测试异步是否正常计算列表高度
       this._getDiscList()
     },
     methods: {
@@ -69,7 +69,7 @@
         })
       },
       loadImage() {
-        //是否第一次调用，避免多次调用浪费资源。只要有一个图片加载即可
+        //是否第一次调用，避免多次调用浪费资源。只要有一个图片加载即可撑开高度
         if (!this.checkLoaded) {
           //当图片加载成功时候调用组件内部的refresh重新计算高度
           this.$refs.scroll.refresh()
