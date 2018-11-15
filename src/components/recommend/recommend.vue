@@ -26,11 +26,15 @@
           </ul>
         </div>
       </div>
+      <div class="loading-container" v-show="!discList.length">
+        <loading></loading>
+      </div>
     </scroll>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import Loading from 'base/loading/loading'
   import Scroll from 'base/scroll/scroll'
   import Slider from 'base/slider/slider'
   import {getRecommend, getDiscList} from 'api/recommend'
@@ -39,7 +43,8 @@
   export default {
     components: {
       Slider,
-      Scroll
+      Scroll,
+      Loading
     },
     data() {
       return {
@@ -48,9 +53,10 @@
       }
     },
     created() {
-      setTimeout(() => {
-        this._getRecommend()
-      }, 0)//测试异步是否正常计算列表高度
+      // setTimeout(() => {
+      //
+      // }, 0)//测试异步是否正常计算列表高度
+      this._getRecommend()
       this._getDiscList()
     },
     methods: {
