@@ -2,10 +2,16 @@ import jsonp from 'common/js/jsonp'
 import {commonParams, options} from './config'
 import axios from 'axios'
 
+// export function db() {
+//   const url = '/db'
+//   return axios.get(url).then((res) => {
+//     console.log(res)
+//   })
+// }
+
 //请求轮播图
 export function getRecommend() {
   const url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg'
-
   const data = Object.assign({}, commonParams, {
     platform: 'h5',
     uin: 0,
@@ -17,7 +23,6 @@ export function getRecommend() {
 //请求歌单列表
 export function getDiscList() {
   const url = '/api/getDiscList'
-
   const data = Object.assign({}, commonParams, {
     platform: 'yqq',
     hostUin: 0,
@@ -29,7 +34,6 @@ export function getDiscList() {
     rnd: Math.random(),
     format: 'json'
   })
-
   return axios.get(url, {
     params: data
   }).then((res) => {

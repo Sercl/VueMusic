@@ -42,6 +42,17 @@ apiRoutes.get('/getDiscList', function (req, res) {
 
 app.use('/api', apiRoutes)
 
+// app.all('*', function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "X-Requested-With,Content-Type");
+//   res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+//   next();
+// });
+
+// // 以下是之前的路由配置代码
+// app.use('/users', router)
+
+
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
