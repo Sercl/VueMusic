@@ -17,7 +17,7 @@
     data() {
       return {}
     },
-    component: {}
+    components: {}
   }
 </script>
 
