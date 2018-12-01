@@ -121,7 +121,7 @@
           }
           //当前页
           this.currentPageIndex = pageIndex
-          //如果自动轮播
+          //如果自动切换
           if (this.autoPlay) {
             //清楚计时器，防止手动滑动时自动跳转
             clearTimeout(this.timer)

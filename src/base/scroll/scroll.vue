@@ -9,6 +9,7 @@
 
   export default {
     props: {
+      //派发scroll事件 1:后派发;2:实时派发;3:动画时也派发;
       probeType: {
         type: Number,
         default: 1
@@ -20,6 +21,11 @@
       data: {
         type: Array,
         default: null
+      },
+      //是否监听滚动事件
+      listenScroll: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -39,11 +45,17 @@
         if (!this.$refs.wrapper) {
           return
         }
-        //初始化BScroll列表滑动，参数1：dom，参数2：
+        //初始化BScroll列表滑动，参数1：dom，参数2：参数对象
         this.scroll = new BScroll(this.$refs.wrapper, {
           probeType: this.probeType,
           click: this.click
         })
+        if (this.listenScroll) {
+          let me = this
+          this.scroll.on('scroll', (pos) => {
+            me.$emit('scroll', pos)
+          })
+        }
       },
       enable() {
         //如果为真则执行
@@ -55,6 +67,13 @@
       refresh() {
         //重新计算
         this.scroll && this.scroll.refresh()
+      },
+      scrollTo() {
+        this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
+      },
+      //跳转到指定元素
+      scrollToElement() {
+        this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
       }
     },
     watch: {
