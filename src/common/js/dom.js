@@ -40,4 +40,43 @@ export function getData(el, name, val) {
     return el.getAttribute(name)
   }
 }
+//获取所有支持的css属性
+let elementStyle = document.createElement('div').style
+
+let vendor = (() => {
+  //定义浏览器支持
+  let transformNames = {
+    webkit: 'webkitTransform',
+    Moz: 'MozTransform',
+    O: 'OTransform',
+    ms: 'msTransform',
+    standard: 'transform'
+  }
+  //遍历返回浏览器支持属性值
+  for (let key in transformNames) {
+    if (elementStyle[transformNames[key]] !== undefined) {
+      return key
+    }
+  }
+
+  return false
+})()
+
+/**
+ * 浏览器兼容css
+ * @param style css属性名
+ * @returns {*} 返回兼容属性
+ */
+export function prefixStyle(style) {
+  if (vendor === false) {
+    return false
+  }
+  //标准浏览器
+  if (vendor === 'standard') {
+    return style
+  }
+  console.log(vendor + style.charAt(0).toUpperCase() + style.substr(1))
+  //其他标准浏览器  浏览器前缀+首字母大写
+  return vendor + style.charAt(0).toUpperCase() + style.substr(1)
+}
 

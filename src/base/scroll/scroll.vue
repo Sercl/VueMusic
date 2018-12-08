@@ -50,6 +50,7 @@
           probeType: this.probeType,
           click: this.click
         })
+        //监听滚动事件将pos暴露给父组件scroll方法
         if (this.listenScroll) {
           let me = this
           this.scroll.on('scroll', (pos) => {
