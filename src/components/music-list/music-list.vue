@@ -99,6 +99,7 @@
         let blur = 0
         console.log(this.$refs.layer.style)
         this.$refs.layer.style[transform] = `translate3d(0,${tranlateY}px,0)`
+        //计算下拉百分比
         const percent = Math.abs(newY / this.imageHeight)
         //下拉时图片跟随放大
         if (newY > 0) {
