@@ -1,7 +1,7 @@
 <template>
   <div class="song-list">
     <ul>
-      <li v-for="song in songs" class="item">
+      <li @click="selectItem(song,index)" v-for="(song,index) in songs" class="item">
         <div class="content">
           <h2 class="name">{{song.name}}</h2>
           <p class="desc">{{getDesc(song)}}</p>
@@ -24,6 +24,19 @@
       return {}
     },
     methods: {
+      /**
+       * @param item 选择歌曲数据
+       * @param index 选择歌曲索引
+       * @return 传递父组件
+       */
+      selectItem(item, index) {
+        this.$emit('select', item, index)
+      },
+      /**
+       * 返回歌手和专辑用.连接
+       * @param song
+       * @returns {string}
+       */
       getDesc(song) {
         return `${song.singer} 。${song.album}`
       }

@@ -6,7 +6,7 @@
     <h1 class="title" v-html="title"></h1>
     <div class="bg-image" :style="bgStyle" ref="bgImage">
       <div class="play-wrapper">
-        <div class="play" v-show="songs.length>0" ref="playBtn">
+        <div @click="random" class="play" v-show="songs.length>0" ref="playBtn">
           <i class="icon-play"></i>
           <span class="text">随机播放全部</span>
         </div>
@@ -22,7 +22,7 @@
             class="list"
     >
       <div class="song-list-wrapper">
-        <song-list :songs="songs"></song-list>
+        <song-list @select="selectItem" :songs="songs"></song-list>
       </div>
       <div class="loading-container" v-show="!songs.length">
         <loading></loading>
@@ -36,6 +36,9 @@
   import SongList from 'base/song-list/song-list'
   import {prefixStyle} from 'common/js/dom'
   import Loading from 'base/loading/loading'
+  import {mapActions} from 'vuex'
+  import {playlistMixin} from 'common/js/mixin'
+
   //头部保留高度
   const RESERVEN_HEIGHT = 40
   //
@@ -44,6 +47,7 @@
   const backdrop = prefixStyle('backdrop-filter')
   export default {
     name: 'music-list',
+    mixins: [playlistMixin],
     props: {
       //背景图
       bgImage: {
@@ -83,11 +87,31 @@
       }
     },
     methods: {
+      ...mapActions([
+        'selectPlay',
+        'randomPlay'
+      ]),
+      handlePlaylist(playlist) {
+        const bottom = playlist.length > 0 ? '60px' : ''
+        this.$refs.list.$el.style.bottom = bottom
+        this.$refs.list.refresh()
+      },
+      random() {
+        this.randomPlay({
+          list: this.songs
+        })
+      },
       scroll(pos) {
         this.scrollY = pos.y
       },
       back() {
         this.$router.back()
+      },
+      selectItem(item, index) {
+        this.selectPlay({
+          list: this.songs,
+          index
+        })
       }
     },
     watch: {
@@ -97,7 +121,7 @@
         let zIndex = 0
         let scale = 1
         let blur = 0
-        console.log(this.$refs.layer.style)
+        //console.log(this.$refs.layer.style)
         this.$refs.layer.style[transform] = `translate3d(0,${tranlateY}px,0)`
         //计算下拉百分比
         const percent = Math.abs(newY / this.imageHeight)

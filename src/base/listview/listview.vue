@@ -89,6 +89,10 @@
       }
     },
     methods: {
+      //暴露给父组件重新计算Scroll方法
+      refresh() {
+        this.$refs.listview.refresh()
+      },
       selectItem(item) {
         this.$emit('select', item)
       },

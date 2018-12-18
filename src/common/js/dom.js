@@ -75,7 +75,7 @@ export function prefixStyle(style) {
   if (vendor === 'standard') {
     return style
   }
-  console.log(vendor + style.charAt(0).toUpperCase() + style.substr(1))
+  //console.log(vendor + style.charAt(0).toUpperCase() + style.substr(1))
   //其他标准浏览器  浏览器前缀+首字母大写
   return vendor + style.charAt(0).toUpperCase() + style.substr(1)
 }
