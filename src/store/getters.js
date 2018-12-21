@@ -1,3 +1,4 @@
+//播放器
 export const singer = state => state.singer
 
 export const playing = state => state.playing
@@ -20,3 +21,6 @@ export const currentIndex = state => state.currentIndex
 export const currentSong = (state) => {
   return state.playlist[state.currentIndex] || {}
 }
+
+//歌单列表
+export const disc = state => state.disc
