@@ -24,3 +24,6 @@ export const currentSong = (state) => {
 
 //歌单列表
 export const disc = state => state.disc
+
+//排行榜
+export const topList = state => state.topList
