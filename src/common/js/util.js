@@ -24,3 +24,22 @@ export function shuffle(arr) {
   }
   return _arr
 }
+
+/**
+ * 节流函数
+ * @param func 函数
+ * @param delay 延时时间
+ */
+export function debounce(func, delay) {
+  let timer
+  return function (...args) {
+    //是否已经在执行
+    if (timer) {
+      //清楚计时器
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      func.apply(this, args)
+    }, delay)
+  }
+}

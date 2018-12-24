@@ -26,6 +26,15 @@
       listenScroll: {
         type: Boolean,
         default: false
+      },
+      pullup: {
+        type: Boolean,
+        default: false
+      },
+      //是否监听滚动开始之前
+      beforeScroll: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -55,6 +64,22 @@
           let me = this
           this.scroll.on('scroll', (pos) => {
             me.$emit('scroll', pos)
+          })
+        }
+        //是否上拉刷新
+        if (this.pullup) {
+          //监听滚动停止
+          this.scroll.on('scrollEnd', () => {
+            //是否滚动到底部,滚动到底部最大偏移50像素
+            if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
+              this.$emit('scrollToEnd')
+            }
+          })
+        }
+        //滚动开始之前触发
+        if (this.beforeScroll) {
+          this.scroll.on('beforeScrollStart', () => {
+            this.$emit('beforeScroll')
           })
         }
       },
