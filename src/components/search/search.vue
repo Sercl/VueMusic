@@ -84,7 +84,7 @@
         const bottom = playlist.length > 0 ? '60px' : ''
         this.$refs.shortcutWrapper.style.bottom = bottom
         this.$refs.searchResult.style.bottom = bottom
-        this.$refs.shortcat.refresh()
+        this.$refs.shortcut.refresh()
         this.$refs.suggest.refresh()
       },
       showConfirm() {
