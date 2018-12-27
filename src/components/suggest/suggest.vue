@@ -70,6 +70,9 @@
       ...mapActions([
         'insertSong'
       ]),
+      refresh() {
+        this.$refs.suggest.refresh()
+      },
       listScroll() {
         this.$emit('listScroll')
       },
@@ -89,6 +92,7 @@
           //在播放列表中添加歌曲
           this.insertSong(item)
         }
+        this.$emit('select')
       },
       search() {
         //重置scroll位置
