@@ -1,7 +1,7 @@
 import * as types from './mutation-types'
 import {playMode} from 'common/js/config'
 import {shuffle} from 'common/js/util'
-import {saveSearch, deleteSearch, clearSearch} from 'common/js/cache'
+import {saveSearch, deleteSearch, clearSearch, savePlay} from 'common/js/cache'
 
 /**
  * 当前元素在数组中的索引
@@ -115,14 +115,59 @@ export const saveSearchHistory = function ({commit}, query) {
   commit(types.SET_SEARCH_HISTORY, saveSearch(query))
 }
 /**
- * 删除搜索历史
+ * 删除对应搜索历史
  * @param commit
  * @param query
  */
 export const deleteSearchHistory = function ({commit}, query) {
   commit(types.SET_SEARCH_HISTORY, deleteSearch(query))
 }
-
+//清空搜索历史记录
 export const clearSearchHistory = function ({commit}) {
   commit(types.SET_SEARCH_HISTORY, clearSearch())
 }
+/**
+ * 删除播放列表中的歌曲
+ * @param commit
+ * @param state
+ * @param song 歌曲
+ */
+export const deleteSong = function ({commit, state}, song) {
+  let playlist = state.playlist.slice()
+  let sequenceList = state.sequenceList.slice()
+  let currentIndex = state.currentIndex
+  //获取播放列表对应歌曲的index并删除
+  let pIndex = findIndex(playlist, song)
+  playlist.splice(pIndex, 1)
+  //获取顺序列表中对应歌曲的index并删除
+  let sIndex = findIndex(sequenceList, song)
+  sequenceList.splice(sIndex, 1)
+  //如果当前播放歌曲在删除歌曲之前或当前播放歌曲是播放列表末尾
+  if (currentIndex > pIndex || currentIndex === playlist.length) {
+    currentIndex--
+  }
+  commit(types.SET_PLAYLIST, playlist)
+  commit(types.SET_SEQUENCE_LIST, sequenceList)
+  commit(types.SET_CURRENT_INDEX, currentIndex)
+
+  const playingState = playlist.length > 0
+  commit(types.SET_PLAYING_STATE, playingState)
+  // //歌曲列表中是否有歌曲
+  // if (!playlist.length) {
+  //   //没有则停止播放
+  //   commit(types.SET_PLAYING_STATE, false)
+  // } else {
+  //   commit(types.SET_PLAYING_STATE, true)
+  // }
+}
+//清空歌曲列表
+export const deleteSongList = function ({commit}) {
+  commit(types.SET_PLAYLIST, [])
+  commit(types.SET_SEQUENCE_LIST, [])
+  commit(types.SET_CURRENT_INDEX, -1)
+  commit(types.SET_PLAYING_STATE, false)
+}
+export const savePlayHistory = function ({commit}, song) {
+  commit(types.SET_PLAY_HISTORY, savePlay(song))
+}
+
