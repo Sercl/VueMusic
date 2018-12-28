@@ -82,7 +82,8 @@
               <i @click="next" class="icon-next"></i>
             </div>
             <div class="icon i-right">
-              <i class="icon" @click="toggleFavorite(currentSong)" :class="getFavoriteIcon(currentSong)"></i>
+              <i class="icon" @click="toggleFavorite(currentSong)"
+                 :class="getFavoriteIcon(currentSong)"></i>
             </div>
           </div>
         </div>
@@ -114,7 +115,7 @@
     <!--H5音乐播放-->
     <audio ref="audio"
            :src="currentSong.url"
-           @canplay="ready"
+           @play="ready"
            @error="error"
            @timeupdate="updateTime"
            @ended="end"
@@ -241,6 +242,8 @@
         //如果歌曲列表只有一首歌，处理边界问题
         if (this.playlist.length === 1) {
           this.loop()
+          //只有一首歌曲时不执行songReady
+          return
         } else {
           let index = this.currentIndex + 1
           if (index === this.playlist.length) {
@@ -259,6 +262,8 @@
         }
         if (this.playlist.length === 1) {
           this.loop()
+          //只有一首歌曲时不执行songReady
+          return
         } else {
           let index = this.currentIndex - 1
           if (index === -1) {
@@ -274,6 +279,11 @@
       //获取歌词数据
       getLyric() {
         this.currentSong.getLyric().then((lyric) => {
+          //如果新获取的歌词不是当前歌曲的歌词则直接返回
+          //防止切换歌曲时歌词异常
+          if (this.currentSong.lyric !== lyric) {
+            return
+          }
           //解析歌词
           this.currentLyric = new Lyric(lyric, this.handleLyric)
           if (this.playing) {
@@ -483,7 +493,8 @@
         }
         //this.$nextTick
         //处理手机端后台不执行js问题
-        setTimeout(() => {
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
           this.$refs.audio.play()
           this.getLyric()
         }, 1000)

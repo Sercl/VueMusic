@@ -55,7 +55,7 @@ export function createSong(musicData) {
     name: musicData.songname,
     album: musicData.albumname,
     //TODO 歌曲临时播放时间
-    duration: 32, //musicData.interval,
+    duration: musicData.interval,
     image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
     //url: `http://isure.stream.qqmusic.qq.com/C100${musicData.songmid}.m4a?fromtag=32`
     url: 'http://lmd.wzrcc.cn/songs/SkyeLey%20-%20%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90%E6%AD%8C.mp3'
