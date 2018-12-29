@@ -44,7 +44,7 @@
   //
   const transform = prefixStyle('transform')
   //
-  const backdrop = prefixStyle('backdrop-filter')
+  //const backdrop = prefixStyle('backdrop-filter')
   export default {
     name: 'music-list',
     mixins: [playlistMixin],
@@ -137,7 +137,7 @@
           //最大是20模糊
           blur = Math.min(20 * percent, 20)
         }
-        this.$refs.filter.style[backdrop] = `blur(${blur}px)`
+        this.$refs.bgImage.style.filter = `blur(${blur}px)`
         //TODO backdrop属性测试
         //this.$refs.filter.style['webkitBackdrop-filter'] = `blur(${blur}px)`
         //是否滚动到顶部
