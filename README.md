@@ -21,6 +21,7 @@ npm run build
 npm run server
 ```
 
+## 目录说明
 ```
 ├─build //生产环境打包配置
 ├─buildback //升级webpack前备份
