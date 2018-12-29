@@ -27,7 +27,7 @@
 <script type="text/ecmascript-6">
   import {search} from 'api/search'
   import {ERR_OK} from 'api/config'
-  import {createSong} from 'common/js/song'
+  import {createSong, isValidMusic, processSongsUrl} from 'common/js/song'
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
   import Singer from 'common/js/singer'
@@ -92,7 +92,7 @@
           //在播放列表中添加歌曲
           this.insertSong(item)
         }
-        this.$emit('select')
+        this.$emit('select', item)
       },
       search() {
         //重置scroll位置
@@ -101,7 +101,10 @@
         this.hasMore = true
         search(this.query, this.page, this.showSinger, perpage).then((res) => {
           if (res.code === ERR_OK) {
-            this.result = this._genResult(res.data)
+            this._genResult(res.data).then((result) => {
+              this.result = result
+            })
+            //this.result = this._genResult(res.data)
             this._checkMore(res.data)
           }
         })
@@ -114,7 +117,10 @@
         this.page++
         search(this.query, this.page, this.showSinger, perpage).then((res) => {
           if (res.code === ERR_OK) {
-            this.result = this.result.concat(this._genResult(res.data))
+            this._genResult(res.data).then((result) => {
+              this.result = this.result.concat(result)
+            })
+            //this.result = this.result.concat(this._genResult(res.data))
             this._checkMore(res.data)
           }
         })
@@ -122,24 +128,28 @@
       //判断是否无更多数据
       _checkMore(data) {
         const song = data.song
-        if (!song.list.length || (song.curnum + song.curpage * perpage) >= song.totalnum) {
+        if (!song.list.length || (song.curnum + (song.curpage - 1) * perpage) >= song.totalnum) {
           this.hasMore = false
         }
       },
       _genResult(data) {
         let ret = []
-        if (data.zhida && data.zhida.singerid) {
+        if (data.zhida && data.zhida.singerid && this.page === 1) {
           ret.push({...data.zhida, ...{type: TYPE_SINGER}})
         }
-        if (data.song) {
-          ret = ret.concat(this._normalizeSongs(data.song.list))
-        }
-        return ret
+        return processSongsUrl(this._normalizeSongs(data.song.list)).then((songs) => {
+          ret = ret.concat(songs)
+          return ret
+        })
+        // if (data.song) {
+        //   ret = ret.concat(this._normalizeSongs(data.song.list))
+        // }
+        // return ret
       },
       _normalizeSongs(list) {
         let ret = []
         list.forEach((musicData) => {
-          if (musicData.songid && musicData.albumid) {
+          if (isValidMusic(musicData)) {
             ret.push(createSong(musicData))
           }
         })
@@ -162,8 +172,11 @@
       }
     },
     watch: {
-      query() {
-        this.search()
+      query(newQuery) {
+        if (!newQuery) {
+          return
+        }
+        this.search(newQuery)
       }
     }
   }

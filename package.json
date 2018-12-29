@@ -5,8 +5,8 @@
   "author": "ustbhuangyi <280309453@qq.com>",
   "private": true,
   "scripts": {
-    "dev": "node build/dev-server.js",
-    "start": "node build/dev-server.js",
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "start": "npm run dev",
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src",
     "server": "node prod.server.js"
@@ -22,12 +22,19 @@
     "js-base64": "2.1.9",
     "jsonp": "0.2.1",
     "lyric-parser": "1.0.1",
-    "vue": "^2.2.6",
+    "vue": "^2.3.3",
     "vue-lazyload": "1.0.3",
-    "vue-router": "^2.3.1",
+    "vue-router": "^2.5.3",
     "vuex": "2.3.1"
   },
   "devDependencies": {
+    "portfinder": "^1.0.13",
+    "postcss-loader": "^2.0.8",
+    "node-notifier": "^5.1.2",
+    "compression": "^1.7.0",
+    "compression-webpack-plugin": "^0.4.0",
+    "body-parser": "^1.18.2",
+
     "autoprefixer": "^6.7.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",
@@ -65,12 +72,12 @@
     "url-loader": "^0.5.8",
     "vue-loader": "^11.3.4",
     "vue-style-loader": "^2.0.5",
-    "vue-template-compiler": "^2.2.6",
-    "webpack": "^2.3.3",
-    "webpack-bundle-analyzer": "^2.2.1",
-    "webpack-dev-middleware": "^1.10.0",
-    "webpack-hot-middleware": "^2.18.0",
-    "webpack-merge": "^4.1.0"
+    "vue-template-compiler": "^2.3.3",
+    "webpack": "^3.6.0",
+    "webpack-bundle-analyzer": "^2.9.0",
+    "webpack-merge": "^4.1.0",
+    "webpack-dev-server": "^2.9.1",
+    "vconsole": "2.5.2"
   },
   "engines": {
     "node": ">= 4.0.0",

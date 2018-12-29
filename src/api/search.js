@@ -1,9 +1,12 @@
-import {commonParams} from './config'
+import {commonParams, proxyUrl} from './config'
 import axios from 'axios'
+
+const debug = process.env.NODE_ENV !== 'production'
 
 //搜索热门歌曲
 export function getHotKey() {
-  const url = '/api/getHotKey'
+  //const url = '/api/getHotKey'
+  const url = debug ? '/api/getHotKey' : proxyUrl + 'getHotKey'
   const data = Object.assign({}, commonParams, {
     format: 'json',
     inCharset: 'utf-8',
@@ -26,7 +29,7 @@ export function getHotKey() {
  * @param zhida 是否需要歌手数据
  */
 export function search(query, page, zhida, perpage) {
-  const url = '/api/search'
+  const url = debug ? '/api/search' : proxyUrl + 'search'
   const data = Object.assign({}, commonParams, {
     format: 'json',
     w: query,

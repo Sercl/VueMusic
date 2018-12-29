@@ -1,4 +1,4 @@
-import {getLyric} from 'api/song'
+import {getLyric, getSongsUrl} from 'api/song'
 import {ERR_OK} from 'api/config'
 import {Base64} from 'js-base64'
 
@@ -22,8 +22,10 @@ export default class Song {
     this.album = album
     this.duration = duration
     this.image = image
+    this.filename = `C400${this.mid}.m4a`
     this.url = url
   }
+
   //获取歌词
   getLyric() {
     if (this.lyric) {
@@ -57,12 +59,9 @@ export function createSong(musicData) {
     //TODO 歌曲临时播放时间
     duration: musicData.interval,
     image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
-    //url: `http://isure.stream.qqmusic.qq.com/C100${musicData.songmid}.m4a?fromtag=32`
-    url: 'http://lmd.wzrcc.cn/songs/SkyeLey%20-%20%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90%E6%AD%8C.mp3'
+    url: musicData.url
   })
 }
-//http://dl.stream.qqmusic.qq.com/C400004Sgjxx15dcO5.m4a?guid=2763302232&vkey=8DBAC8CF4550FB746E257204C28F303930F774D5370BAD0C6D42F9A5BCE9C01F55AF5561C980DA38B9219F20CE016F49FEE335681E2205CD&uin=0&fromtag=66
-//http://dl.stream.qqmusic.qq.com/C400000O9EQX3MKTdL.m4a?guid=2763302232&vkey=CF685F5E38D52BD537D8A52158324254F0C7566275B7AAE04D453A137132182C56B8847D228C4444A7A72B3BEAB4988FD3203AFF5C26355E&uin=0&fromtag=66
 
 /**
  * 处理歌手数据
@@ -78,4 +77,24 @@ function filterSinger(singer) {
     ret.push(s.name)
   })
   return ret.join('/')
+}
+
+export function isValidMusic(musicData) {
+  return musicData.songid && musicData.albummid && (!musicData.pay || musicData.pay.payalbumprice === 0)
+}
+
+export function processSongsUrl(songs) {
+  return getSongsUrl(songs).then((res) => {
+    if (res.code === ERR_OK) {
+      let urlMid = res.url_mid
+      if (urlMid && urlMid.code === ERR_OK) {
+        let midUrlInfo = urlMid.data.midurlinfo
+        midUrlInfo.forEach((info, index) => {
+          let song = songs[index]
+          song.url = `http://dl.stream.qqmusic.qq.com/${info.purl}`
+        })
+      }
+    }
+    return songs
+  })
 }

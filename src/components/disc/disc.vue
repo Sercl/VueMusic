@@ -7,9 +7,9 @@
 <script type="text/ecmascript-6">
   import MusicList from '../music-list/music-list'
   import {mapGetters} from 'vuex'
-  import {getSongList} from 'api/recommend'
+  import {getCdInfo} from 'api/recommend'
   import {ERR_OK} from '../../api/config'
-  import {createSong} from 'common/js/song'
+  import {createSong, isValidMusic, processSongsUrl} from 'common/js/song'
 
   export default {
     name: 'disc',
@@ -28,16 +28,19 @@
           this.$router.push('/recommend')
           return
         }
-        getSongList(this.disc.dissid).then((res) => {
+        getCdInfo(this.disc.dissid).then((res) => {
           if (res.code === ERR_OK) {
-            this.songs = this._normalizeSongs(res.cdlist[0].songlist)
+            processSongsUrl(this._normalizeSongs(res.cdlist[0].songlist)).then((songs) => {
+              this.songs = songs
+            })
+            //this.songs = this._normalizeSongs(res.cdlist[0].songlist)
           }
         })
       },
       _normalizeSongs(list) {
         let ret = []
         list.forEach((musicData) => {
-          if (musicData.songid && musicData.albumid) {
+          if (isValidMusic(musicData)) {
             ret.push(createSong(musicData))
           }
         })

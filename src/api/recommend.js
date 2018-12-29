@@ -1,13 +1,7 @@
 import jsonp from 'common/js/jsonp'
-import {commonParams, options} from './config'
+import {commonParams, options, proxyUrl} from './config'
 import axios from 'axios'
-
-// export function db() {
-//   const url = '/db'
-//   return axios.get(url).then((res) => {
-//     console.log(res)
-//   })
-// }
+const debug = process.env.NODE_ENV !== 'production'
 
 //请求轮播图
 export function getRecommend() {
@@ -23,7 +17,7 @@ export function getRecommend() {
 
 //请求歌单列表
 export function getDiscList() {
-  const url = '/api/getDiscList'
+  const url = debug ? '/api/getDiscList' : proxyUrl + 'getDiscList'
   const data = Object.assign({}, commonParams, {
     platform: 'yqq',
     hostUin: 0,
@@ -42,8 +36,8 @@ export function getDiscList() {
   })
 }
 
-export function getSongList(disstid) {
-  const url = '/api/getSongList'
+export function getCdInfo(disstid) {
+  const url = debug ? '/api/getCdInfo' : proxyUrl + 'getCdInfo'
 
   const data = Object.assign({}, commonParams, {
     disstid,

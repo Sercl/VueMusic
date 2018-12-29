@@ -12,3 +12,6 @@ export const options = {
 }
 //是否成功获取
 export const ERR_OK = 0
+
+//代理域名
+export const proxyUrl = 'http://music.weixy666.cn/music/api/'
