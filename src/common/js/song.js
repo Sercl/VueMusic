@@ -86,14 +86,11 @@ export function isValidMusic(musicData) {
 export function processSongsUrl(songs) {
   return getSongsUrl(songs).then((res) => {
     if (res.code === ERR_OK) {
-      let urlMid = res.url_mid
-      if (urlMid && urlMid.code === ERR_OK) {
-        let midUrlInfo = urlMid.data.midurlinfo
-        midUrlInfo.forEach((info, index) => {
-          let song = songs[index]
-          song.url = `http://dl.stream.qqmusic.qq.com/${info.purl}`
-        })
-      }
+      let midUrlInfo = res.url_mid.data.midurlinfo
+      midUrlInfo.forEach((info, index) => {
+        let song = songs[index]
+        song.url = `http://dl.stream.qqmusic.qq.com/${info.purl}`
+      })
     }
     return songs
   })

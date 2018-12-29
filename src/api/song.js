@@ -1,6 +1,7 @@
 import {commonParams, proxyUrl} from './config'
 import axios from 'axios'
 import {getUid} from 'common/js/uid'
+import {ERR_OK} from 'api/config'
 
 const debug = process.env.NODE_ENV !== 'production'
 
@@ -22,6 +23,7 @@ export function getLyric(mid) {
     return Promise.resolve(res.data)
   })
 }
+
 export function getSongsUrl(songs) {
   const url = debug ? '/api/getPurlUrl' : proxyUrl + 'getPurlUrl'
 
@@ -32,6 +34,7 @@ export function getSongsUrl(songs) {
     mids.push(song.mid)
     types.push(0)
   })
+  const urlMid = genUrlMid(mids, types)
 
   const data = Object.assign({}, commonParams, {
     g_tk: 5381,
@@ -41,11 +44,42 @@ export function getSongsUrl(songs) {
     uin: 0
   })
 
-  return axios.post(url, {
-    comm: data,
-    url_mid: genUrlMid(mids, types)
-  }).then((res) => {
-    return Promise.resolve(res.data)
+  return new Promise((resolve, reject) => {
+    let tryTime = 3
+
+    function request() {
+      return axios.post(url, {
+        comm: data,
+        url_mid: urlMid
+      }).then((response) => {
+        const res = response.data
+        if (res.code === ERR_OK) {
+          let urlMid = res.url_mid
+          if (urlMid && urlMid.code === ERR_OK) {
+            const info = urlMid.data.midurlinfo[0]
+            if (info && info.purl) {
+              resolve(res)
+            } else {
+              retry()
+            }
+          } else {
+            retry()
+          }
+        } else {
+          retry()
+        }
+      })
+    }
+
+    function retry() {
+      if (--tryTime >= 0) {
+        request()
+      } else {
+        reject(new Error('Can not get the songs url'))
+      }
+    }
+
+    request()
   })
 }
 
